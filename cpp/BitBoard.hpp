@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <bitset>
 #include <stdlib.h>
+#include "Common.hpp"
 
 /*
 BitBoard
@@ -39,6 +40,39 @@ the board is located in rows 1 to 9 and columns 1 to 9
                         "10000000001" \
                         "10000000001" \
                         "11111111111"
+#define STRING_OF_PRO_ZONE "00000000000" \
+                           "01111111110" \
+                           "01111111110" \
+                           "01111111110" \
+                           "00000000000" \
+                           "00000000000" \
+                           "00000000000" \
+                           "01111111110" \
+                           "01111111110" \
+                           "01111111110" \
+                           "00000000000"
+#define STRING_OF_LAST1_ZONE "00000000000" \
+                             "01111111110" \
+                             "00000000000" \
+                             "00000000000" \
+                             "00000000000" \
+                             "00000000000" \
+                             "00000000000" \
+                             "00000000000" \
+                             "00000000000" \
+                             "01111111110" \
+                             "00000000000"
+#define STRING_OF_LAST2_ZONE "00000000000" \
+                             "01111111110" \
+                             "01111111110" \
+                             "00000000000" \
+                             "00000000000" \
+                             "00000000000" \
+                             "00000000000" \
+                             "00000000000" \
+                             "01111111110" \
+                             "01111111110" \
+                             "00000000000"
 
 class BitBoard
 {
@@ -58,14 +92,14 @@ public:
         board = std::bitset<LENGTH_OF_BOARD>(value);
     }
     void to_ullongs(uint64_t* result){
-        std::bitset<LENGTH_OF_BOARD> bn1 = board >> 64;
-        std::bitset<LENGTH_OF_BOARD> bn2 = (bn1 << 64) ^ board;
+        std::bitset<LENGTH_OF_BOARD> bn1 = board >> BIT_NUMBER_ULL;
+        std::bitset<LENGTH_OF_BOARD> bn2 = (bn1 << BIT_NUMBER_ULL) ^ board;
         result[0] = bn1.to_ullong();
         result[1] = bn2.to_ullong();
     }
     int getTrues(int** result){
         int trueCount = board.count();
-        *result = (int*)calloc(trueCount, sizeof(int));
+        *result = new int[trueCount];
         int index = 0;
         for (int i = 0; i < board.size(); i++){
             if (board.test(i)){

@@ -4,15 +4,28 @@
 #include <bitset>
 #include "BitBoard.hpp"
 #include "Board.hpp"
+#include <time.h>
 
 int main() {
     Board board = Board();
     int* arrayTrueIndex;
+    
+    struct timeval start, end;
+    mingw_gettimeofday(&start, NULL);
     int trueCount = board.hasPiece.getTrues(&arrayTrueIndex);
+    mingw_gettimeofday(&end, NULL);
+    std::cout << "duration = " << (end.tv_usec - start.tv_usec) << "usec.\n";
+
+    mingw_gettimeofday(&start, NULL);
     for (int i = 0; i < trueCount; i++){
         printf("%d,", arrayTrueIndex[i]);
     }
     printf("\n");
+    mingw_gettimeofday(&end, NULL);
+    std::cout << "duration = " << (end.tv_usec - start.tv_usec) << "usec.\n";
+
+    BitBoard bitMovable = board.getAbleMoveSquares(24);
+    
     std::cout << "frame   : " << board.isFrame.board << std::endl;
     std::cout << "hasPiece: " << board.hasPiece.board << std::endl;
     std::cout << "Black   : " << board.playerPossession[(uint64_t)ColorType::Black].board << std::endl;
@@ -26,42 +39,63 @@ int main() {
     std::cout << "Knight  : " << board.hasSpecificPiece[(uint64_t)PieceType::Knight].board << std::endl;
     std::cout << "Lance   : " << board.hasSpecificPiece[(uint64_t)PieceType::Lance].board << std::endl;
     std::cout << "Pawn    : " << board.hasSpecificPiece[(uint64_t)PieceType::Pawn].board << std::endl;
-    
-    // uint64_t num = 4096;
-    // BitBoard bitBoard = BitBoard(num);
-    // BitBoard bitFrame = BitBoard(STRING_OF_FRAME);
-    // BitBoard bitMovable = BitBoard();
-    // std::bitset<4> isInBoard(15);
-    // for (int i = 1; i < LENGTH_OF_EDGE; i++)
-    // {
-    //     if (isInBoard.none())
-    //     {
-    //         break;
-    //     }
-    //     for (int j = 0; j < 4; j++)
-    //     {
-    //         if (isInBoard[j])
-    //         {
-    //             int v = j == 0 || j == 3 ? - 1 * i : i;
-    //             int h = j > 1 ? - 1 * i : i;
-    //             int shiftNumber = LENGTH_OF_FRAME * h + v;
-    //             std::bitset<121> bn1 = shiftNumber > 0 ? bitBoard.board << shiftNumber : bitBoard.board >> abs(shiftNumber);
-    //             if ((bitFrame.board & bn1).any())
-    //             {
-    //                 isInBoard[j] = 0;
-    //             }
-    //             else
-    //             {
-    //                 bitMovable.board = bitMovable.board | bn1;
-    //             }
-    //         }
-    //     }
-    // }
-    // std::cout << "bf   : " << bitFrame.board << std::endl;
-    // std::cout << "b    : " << bitBoard.board << std::endl;
-    // std::cout << "bn   : " << bitMovable.board << std::endl;
-    // uint64_t uuln[2];
-    // bitMovable.to_ullongs(uuln);
-    // std::cout << "uuln1  : " << uuln[0] << std::endl;
-    // std::cout << "uuln2  : " << uuln[1] << std::endl;
+
+    std::cout << "Movable : " << bitMovable.board << std::endl;
+    int* indexs;
+    int indexsCount = bitMovable.getTrues(&indexs);
+    for (int i = 0; i < indexsCount; i++){
+        printf("%d,", indexs[i]);
+    }
+    printf("\n");
+    free(indexs);
+
+    bitMovable = board.getAbleMoveSquares(96);
+    indexs;
+    indexsCount = bitMovable.getTrues(&indexs);
+    printf("96: ");
+    for (int i = 0; i < indexsCount; i++){
+        printf("%d,", indexs[i]);
+    }
+    printf("\n");
+    free(indexs);
+
+    bitMovable = board.getAbleMoveSquares(41);
+    indexs;
+    indexsCount = bitMovable.getTrues(&indexs);
+    printf("41: ");
+    for (int i = 0; i < indexsCount; i++){
+        printf("%d,", indexs[i]);
+    }
+    printf("\n");
+    free(indexs);
+
+    bitMovable = board.getAbleMoveSquares(16);
+    indexs;
+    indexsCount = bitMovable.getTrues(&indexs);
+    printf("16: ");
+    for (int i = 0; i < indexsCount; i++){
+        printf("%d,", indexs[i]);
+    }
+    printf("\n");
+    free(indexs);
+
+    bitMovable = board.getAbleMoveSquares(101);
+    indexs;
+    indexsCount = bitMovable.getTrues(&indexs);
+    printf("101: ");
+    for (int i = 0; i < indexsCount; i++){
+        printf("%d,", indexs[i]);
+    }
+    printf("\n");
+    free(indexs);
+
+    bitMovable = board.getAbleMoveSquares(107);
+    indexs;
+    indexsCount = bitMovable.getTrues(&indexs);
+    printf("107: ");
+    for (int i = 0; i < indexsCount; i++){
+        printf("%d,", indexs[i]);
+    }
+    printf("\n");
+    free(indexs);
 }
