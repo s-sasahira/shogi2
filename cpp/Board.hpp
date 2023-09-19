@@ -280,15 +280,14 @@ public:
         bitBoard.board.set(index);
         BitBoard bitMovable = BitBoard();
         for (int i = 1; i < LENGTH_OF_EDGE; i++){
-             for (int j = 0; j < (int)DirectionNameNumber; j++)
-            {
+             for (int j = 0; j < (int)DirectionNameNumber; j++){
                 if (moveTypes[j] == MoveType::None){
                     continue;
                 }
-                if (isInBoard[j])
-                {
+
+                if (isInBoard[j]){
                     Direction direction = Direction((DirectionName)j);
-                    Direction up = Direction(DirectionName::UP);
+                    Direction up = Direction(UP);
                     if (colorType == ColorType::White){
                         direction.reverse();
                         up.reverse();
@@ -300,16 +299,18 @@ public:
                     }
                     int shiftNumber = LENGTH_OF_FRAME * v + h;
                     std::bitset<LENGTH_OF_BOARD> bn1 = shiftNumber > 0 ? bitBoard.board << shiftNumber : bitBoard.board >> abs(shiftNumber);
-                    if ((isFrame.board & bn1).any())
-                    {
-                        isInBoard[j] = 0;
-                    }
-                    else
-                    {
+                    if ((isFrame.board & bn1).any()){
+                        isInBoard.reset(j);
+                    }else if ((playerPossession[(int)Color::getReverseColor(colorType)].board & bn1).any()){
+                        isInBoard.reset(j);
+                        bitMovable.board = bitMovable.board | bn1;
+                    }else if ((playerPossession[(int)colorType].board & bn1).any()){
+                        isInBoard.reset(j);
+                    }else{
                         bitMovable.board = bitMovable.board | bn1;
                     }
                     if (moveTypes[j] != MoveType::Long){
-                        isInBoard[j] = 0;
+                        isInBoard.reset(j);
                     }
                 }
             }
