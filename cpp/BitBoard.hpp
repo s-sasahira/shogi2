@@ -40,17 +40,28 @@ the board is located in rows 1 to 9 and columns 1 to 9
                         "10000000001" \
                         "10000000001" \
                         "11111111111"
-#define STRING_OF_PRO_ZONE "00000000000" \
-                           "01111111110" \
-                           "01111111110" \
-                           "01111111110" \
-                           "00000000000" \
-                           "00000000000" \
-                           "00000000000" \
-                           "01111111110" \
-                           "01111111110" \
-                           "01111111110" \
-                           "00000000000"
+#define STRING_OF_PRO_ZONE_BLACK "00000000000" \
+                                 "00000000000" \
+                                 "00000000000" \
+                                 "00000000000" \
+                                 "00000000000" \
+                                 "00000000000" \
+                                 "00000000000" \
+                                 "01111111110" \
+                                 "01111111110" \
+                                 "01111111110" \
+                                 "00000000000"
+#define STRING_OF_PRO_ZONE_WHITE "00000000000" \
+                                 "01111111110" \
+                                 "01111111110" \
+                                 "01111111110" \
+                                 "00000000000" \
+                                 "00000000000" \
+                                 "00000000000" \
+                                 "00000000000" \
+                                 "00000000000" \
+                                 "00000000000" \
+                                 "00000000000"
 #define STRING_OF_LAST1_ZONE "00000000000" \
                              "01111111110" \
                              "00000000000" \
@@ -85,6 +96,9 @@ public:
     BitBoard(const BitBoard& bitBoard){
         board = bitBoard.board;
     }
+    BitBoard(const std::bitset<LENGTH_OF_BOARD> bitset){
+        board = bitset;
+    }
     BitBoard(const uint64_t value){
         board = std::bitset<LENGTH_OF_BOARD>(value);
     }
@@ -108,6 +122,27 @@ public:
             }
         }
         return trueCount;
+    }
+
+    BitBoard operator &(BitBoard bitBoard){
+        return (*this).board & bitBoard.board;
+    }
+    BitBoard operator &(std::bitset<LENGTH_OF_BOARD> board){
+        return (*this).board & board;
+    }
+
+    BitBoard operator |(BitBoard bitBoard){
+        return (*this).board | bitBoard.board;
+    }
+    BitBoard operator |(std::bitset<LENGTH_OF_BOARD> board){
+        return (*this).board | board;
+    }
+
+    BitBoard operator <<(int num){
+        return (*this).board << num;
+    }
+    BitBoard operator >>(int num){
+        return (*this).board >> num;
     }
 };
 #endif

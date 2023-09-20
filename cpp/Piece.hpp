@@ -11,8 +11,16 @@ class Piece
 {
 private:
 public:
+    ColorType owner;
     PieceType type;
-    PieceName name;
+    Piece(){
+        owner = ColorType::None;
+        type = PieceType::None;
+    }
+    Piece(ColorType colorType, PieceType pieceType){
+        owner = colorType;
+        type = pieceType;
+    }
     static void getMoveType(MoveType moveTypes[(int)DirectionName::DirectionNameNumber], PieceType pieceType){
         using enum PieceType;
         switch (pieceType){
@@ -171,47 +179,8 @@ public:
             break;
             }
         case ProSilver:
-            {
-            using enum DirectionName;
-            using enum MoveType;
-            moveTypes[(int)UP] = Short;
-            moveTypes[(int)UP_LEFT] = Short;
-            moveTypes[(int)LEFT] = Short;
-            moveTypes[(int)DOWN_LEFT] = None;
-            moveTypes[(int)DOWN] = Short;
-            moveTypes[(int)DOWN_RIGHT] = None;
-            moveTypes[(int)RIGHT] = Short;
-            moveTypes[(int)UP_RIGHT] = Short;
-            break;
-            }
         case ProKnight:
-            {
-            using enum DirectionName;
-            using enum MoveType;
-            moveTypes[(int)UP] = Short;
-            moveTypes[(int)UP_LEFT] = Short;
-            moveTypes[(int)LEFT] = Short;
-            moveTypes[(int)DOWN_LEFT] = None;
-            moveTypes[(int)DOWN] = Short;
-            moveTypes[(int)DOWN_RIGHT] = None;
-            moveTypes[(int)RIGHT] = Short;
-            moveTypes[(int)UP_RIGHT] = Short;
-            break;
-            }
         case ProLance:
-            {
-            using enum DirectionName;
-            using enum MoveType;
-            moveTypes[(int)UP] = Short;
-            moveTypes[(int)UP_LEFT] = Short;
-            moveTypes[(int)LEFT] = Short;
-            moveTypes[(int)DOWN_LEFT] = None;
-            moveTypes[(int)DOWN] = Short;
-            moveTypes[(int)DOWN_RIGHT] = None;
-            moveTypes[(int)RIGHT] = Short;
-            moveTypes[(int)UP_RIGHT] = Short;
-            break;
-            }
         case ProPawn:
             {
             using enum DirectionName;
@@ -226,6 +195,31 @@ public:
             moveTypes[(int)UP_RIGHT] = Short;
             break;
             }
+        }
+    }
+    static bool ablePro(PieceType pieceType){
+        using enum PieceType;
+        switch (pieceType){
+        case None:
+        case King:
+        case Gold:  
+            return false;
+        case Rook:
+        case Bichop:
+        case Silver:
+        case Knight:
+        case Lance:
+        case Pawn:
+            return true;
+        case Dragon:
+        case Horse:
+        case ProSilver:
+        case ProKnight:
+        case ProLance:
+        case ProPawn:
+            return false;
+        default:
+            return false;
         }
     }
 };

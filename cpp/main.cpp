@@ -7,7 +7,7 @@
 #include <time.h>
 
 int main() {
-    Board board = Board();
+    Board board = Board(1);
     int* arrayTrueIndex;
     
     struct timeval start, end;
@@ -28,6 +28,8 @@ int main() {
     
     std::cout << "frame   : " << board.isFrame.board << std::endl;
     std::cout << "hasPiece: " << board.hasPiece.board << std::endl;
+    std::cout << "ableProB: " << board.ablePro[0].board << std::endl;
+    std::cout << "ableProW: " << board.ablePro[1].board << std::endl;
     std::cout << "Black   : " << board.playerPossession[(uint64_t)ColorType::Black].board << std::endl;
     std::cout << "White   : " << board.playerPossession[(uint64_t)ColorType::White].board << std::endl;
     std::cout << "None    : " << board.hasSpecificPiece[(uint64_t)PieceType::None].board << std::endl;
@@ -39,81 +41,36 @@ int main() {
     std::cout << "Knight  : " << board.hasSpecificPiece[(uint64_t)PieceType::Knight].board << std::endl;
     std::cout << "Lance   : " << board.hasSpecificPiece[(uint64_t)PieceType::Lance].board << std::endl;
     std::cout << "Pawn    : " << board.hasSpecificPiece[(uint64_t)PieceType::Pawn].board << std::endl;
+    std::cout << "Dragon  : " << board.hasSpecificPiece[(uint64_t)PieceType::Dragon].board << std::endl;
+    std::cout << "Horse   : " << board.hasSpecificPiece[(uint64_t)PieceType::Horse].board << std::endl;
+    std::cout << "ProSilve: " << board.hasSpecificPiece[(uint64_t)PieceType::ProSilver].board << std::endl;
+    std::cout << "ProKnigh: " << board.hasSpecificPiece[(uint64_t)PieceType::ProKnight].board << std::endl;
+    std::cout << "ProLance: " << board.hasSpecificPiece[(uint64_t)PieceType::ProLance].board << std::endl;
+    std::cout << "ProPawn : " << board.hasSpecificPiece[(uint64_t)PieceType::ProPawn].board << std::endl;
 
-    mingw_gettimeofday(&start, NULL);
-    BitBoard bitMovable = board.getAbleMoveSquares(24);
-    mingw_gettimeofday(&end, NULL);
-    std::cout << "duration = " << (end.tv_usec - start.tv_usec) << "usec.\n";
-    int* indexs;
-    int indexsCount = bitMovable.getTrues(&indexs);
-    for (int i = 0; i < indexsCount; i++){
-        printf("%d,", indexs[i]);
+    int array[5] = {35, 58, 67, 80, 101};
+    for (int j = 0; j < 5; j++){
+        mingw_gettimeofday(&start, NULL);
+        BitBoard bitMovable = board.getAbleMoveSquares(array[j]);
+        BitBoard bitProMovable = board.getAbleProMoveSquares(array[j], bitMovable);
+        mingw_gettimeofday(&end, NULL);
+        std::cout << "duration = " << (end.tv_usec - start.tv_usec) << "usec.\n";
+        int* indexs1;
+        int* indexs2;
+        int indexsCount1 = bitMovable.getTrues(&indexs1);
+        int indexsCount2 = bitProMovable.getTrues(&indexs2);
+        printf("%d: ", array[j]);
+        for (int i = 0; i < indexsCount1; i++){
+            printf("%d,", indexs1[i]);
+        }
+        printf(" pro: ");
+        for (int i = 0; i < indexsCount2; i++){
+            printf("%d,", indexs2[i]);
+        }
+        printf("\n");
+        free(indexs1);
+        free(indexs2);
     }
-    printf("\n");
-    free(indexs);
+    
 
-    mingw_gettimeofday(&start, NULL);
-    bitMovable = board.getAbleMoveSquares(90);
-    mingw_gettimeofday(&end, NULL);
-    std::cout << "duration = " << (end.tv_usec - start.tv_usec) << "usec.\n";
-    indexs;
-    indexsCount = bitMovable.getTrues(&indexs);
-    printf("90: ");
-    for (int i = 0; i < indexsCount; i++){
-        printf("%d,", indexs[i]);
-    }
-    printf("\n");
-    free(indexs);
-
-    mingw_gettimeofday(&start, NULL);
-    bitMovable = board.getAbleMoveSquares(41);
-    mingw_gettimeofday(&end, NULL);
-    std::cout << "duration = " << (end.tv_usec - start.tv_usec) << "usec.\n";
-    indexs;
-    indexsCount = bitMovable.getTrues(&indexs);
-    printf("41: ");
-    for (int i = 0; i < indexsCount; i++){
-        printf("%d,", indexs[i]);
-    }
-    printf("\n");
-    free(indexs);
-
-    mingw_gettimeofday(&start, NULL);
-    bitMovable = board.getAbleMoveSquares(16);
-    mingw_gettimeofday(&end, NULL);
-    std::cout << "duration = " << (end.tv_usec - start.tv_usec) << "usec.\n";
-    indexs;
-    indexsCount = bitMovable.getTrues(&indexs);
-    printf("16: ");
-    for (int i = 0; i < indexsCount; i++){
-        printf("%d,", indexs[i]);
-    }
-    printf("\n");
-    free(indexs);
-
-    mingw_gettimeofday(&start, NULL);
-    bitMovable = board.getAbleMoveSquares(101);
-    mingw_gettimeofday(&end, NULL);
-    std::cout << "duration = " << (end.tv_usec - start.tv_usec) << "usec.\n";
-    indexs;
-    indexsCount = bitMovable.getTrues(&indexs);
-    printf("101: ");
-    for (int i = 0; i < indexsCount; i++){
-        printf("%d,", indexs[i]);
-    }
-    printf("\n");
-    free(indexs);
-
-    mingw_gettimeofday(&start, NULL);
-    bitMovable = board.getAbleMoveSquares(107);
-    mingw_gettimeofday(&end, NULL);
-    std::cout << "duration = " << (end.tv_usec - start.tv_usec) << "usec.\n";
-    indexs;
-    indexsCount = bitMovable.getTrues(&indexs);
-    printf("107: ");
-    for (int i = 0; i < indexsCount; i++){
-        printf("%d,", indexs[i]);
-    }
-    printf("\n");
-    free(indexs);
 }
