@@ -8,6 +8,7 @@
 #include <time.h>
 
 int main() {
+    
     Board board = Board(1);
     int* arrayTrueIndex;
     
@@ -76,5 +77,18 @@ int main() {
         free(indexs2);
     }
     
+    mingw_gettimeofday(&start, NULL);
+    BitBoard a = BitBoard::generateColumn(8);
+    mingw_gettimeofday(&end, NULL);
+    std::cout << "duration = " << (end.tv_usec - start.tv_usec) << "usec.\n";
 
+    std::cout << "a : " << a.board << std::endl;
+    int* indexs;
+    int indexsCount = a.getTrues(&indexs);
+     printf(" a: ");
+    for (int i = 0; i < indexsCount; i++){
+        Address toAddress = Address::indexToAddress(indexs[i]);
+        printf("%d%d,", toAddress.column, toAddress.row);
+    }
+    printf("\n");
 }

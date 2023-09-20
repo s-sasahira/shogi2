@@ -7,404 +7,6 @@
 #include "Hand.hpp"
 #include "Address.hpp"
 
-#define STRING_OF_START_PIECE "00000000000" \
-                              "01111111110" \
-                              "00100000100" \
-                              "01111111110" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "01111111110" \
-                              "00100000100" \
-                              "01111111110" \
-                              "00000000000"
-#define STRING_OF_START_BLACK "00000000000" \
-                              "01111111110" \
-                              "00100000100" \
-                              "01111111110" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000"
-#define STRING_OF_START_WHITE "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "01111111110" \
-                              "00100000100" \
-                              "01111111110" \
-                              "00000000000"
-#define STRING_OF_START_NONE  "00000000000" \
-                              "00000000000" \
-                              "01011111010" \
-                              "00000000000" \
-                              "01111111110" \
-                              "01111111110" \
-                              "01111111110" \
-                              "00000000000" \
-                              "01011111010" \
-                              "00000000000" \
-                              "00000000000"
-#define STRING_OF_START_KING  "00000000000" \
-                              "00000100000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000100000" \
-                              "00000000000"
-#define STRING_OF_START_GOLD  "00000000000" \
-                              "00001010000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00001010000" \
-                              "00000000000"
-#define STRING_OF_START_ROOK "00000000000" \
-                               "00000000000" \
-                               "00000000100" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00100000000" \
-                               "00000000000" \
-                               "00000000000"
-#define STRING_OF_START_BICHOP  "00000000000" \
-                              "00000000000" \
-                              "00100000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000100" \
-                              "00000000000" \
-                              "00000000000"
-#define STRING_OF_START_SILVER "00000000000" \
-                               "00010001000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00010001000" \
-                               "00000000000"
-#define STRING_OF_START_KNIGHT "00000000000" \
-                               "00100000100" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00100000100" \
-                               "00000000000"
-#define STRING_OF_START_LANCE "00000000000" \
-                              "01000000010" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "01000000010" \
-                              "00000000000"
-#define STRING_OF_START_PAWN "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "01111111110" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "01111111110" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000"
-#define STRING_OF_START_DRAGON "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000"
-#define STRING_OF_START_HORSE "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000"
-#define STRING_OF_START_PROSILVER "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000"
-#define STRING_OF_START_PROKNIGHT "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000" \
-                                  "00000000000"
-#define STRING_OF_START_PROLANCE "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000"
-#define STRING_OF_START_PROPAWN "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000"
-
-#define STRING_OF_TEST_PIECE "00000000000" \
-                             "00000000100" \
-                             "00000000000" \
-                             "00000001000" \
-                             "00000000010" \
-                             "00000001000" \
-                             "00000000000" \
-                             "00000000100" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000"
-#define STRING_OF_TEST_BLACK "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000001000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000"
-#define STRING_OF_TEST_WHITE "00000000000" \
-                             "00000000100" \
-                             "00000000000" \
-                             "00000001000" \
-                             "00000000010" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000100" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000"
-#define STRING_OF_TEST_NONE "00000000000" \
-                            "01111111010" \
-                            "01111111110" \
-                            "01111110110" \
-                            "01111111100" \
-                            "01111110110" \
-                            "01111111110" \
-                            "01111111010" \
-                            "01111111110" \
-                            "01111111110" \
-                            "00000000000"
-#define STRING_OF_TEST_KING "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000"
-#define STRING_OF_TEST_GOLD "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000"
-#define STRING_OF_TEST_ROOK "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000"
-#define STRING_OF_TEST_BICHOP "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000001000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000"
-#define STRING_OF_TEST_SILVER "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000"
-#define STRING_OF_TEST_KNIGHT "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000010" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000"
-#define STRING_OF_TEST_LANCE "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000001000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000"
-#define STRING_OF_TEST_PAWN "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000100" \
-                            "00000000000" \
-                            "00000000000" \
-                            "00000000000"
-#define STRING_OF_TEST_DRAGON "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000" \
-                              "00000000000"
-#define STRING_OF_TEST_HORSE "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000" \
-                             "00000000000"
-#define STRING_OF_TEST_PROSILVER "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000"
-#define STRING_OF_TEST_PROKNIGHT "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000" \
-                                 "00000000000"
-#define STRING_OF_TEST_PROLANCE "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000" \
-                                "00000000000"
-#define STRING_OF_TEST_PROPAWN "00000000000" \
-                               "00000000100" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000" \
-                               "00000000000"
-
 class Board
 {
 private:
@@ -439,7 +41,12 @@ private:
         }
     }
     void moveToHand(int index, bool isColorReverse = true){
+        using enum PieceType;
         PieceType pieceType = getPieceTypeFromIndex(index);
+        if ((int)pieceType > (int)Promote){
+            pieceType = (PieceType)((int)pieceType - (int)Promote);
+        }
+
         ColorType colorType = getColorTypeFromIndex(index);
         if (isColorReverse){
             colorType = Color::getReverseColor(colorType);
@@ -466,29 +73,58 @@ public:
     Hand hand;
 
     Board(){
-        hasPiece = BitBoard(STRING_OF_START_PIECE);
-        {
-        using enum ColorType;
-        playerPossession[(int)Black] = BitBoard(STRING_OF_START_BLACK);
-        playerPossession[(int)White] = BitBoard(STRING_OF_START_WHITE);
-        }{
+        hasPiece = BitBoard();
         using enum PieceType;
-        hasSpecificPiece[(int)None] = BitBoard(STRING_OF_START_NONE);
-        hasSpecificPiece[(int)King] = BitBoard(STRING_OF_START_KING);
-        hasSpecificPiece[(int)Gold] = BitBoard(STRING_OF_START_GOLD);
-        hasSpecificPiece[(int)Rook] = BitBoard(STRING_OF_START_ROOK);
-        hasSpecificPiece[(int)Bichop] = BitBoard(STRING_OF_START_BICHOP);
-        hasSpecificPiece[(int)Silver] = BitBoard(STRING_OF_START_SILVER);
-        hasSpecificPiece[(int)Knight] = BitBoard(STRING_OF_START_KNIGHT);
-        hasSpecificPiece[(int)Lance] = BitBoard(STRING_OF_START_LANCE);
-        hasSpecificPiece[(int)Pawn] = BitBoard(STRING_OF_START_PAWN);
-        hasSpecificPiece[(int)Dragon] = BitBoard(STRING_OF_START_DRAGON);
-        hasSpecificPiece[(int)Horse] = BitBoard(STRING_OF_START_HORSE);
-        hasSpecificPiece[(int)ProSilver] = BitBoard(STRING_OF_START_PROSILVER);
-        hasSpecificPiece[(int)ProKnight] = BitBoard(STRING_OF_START_PROKNIGHT);
-        hasSpecificPiece[(int)ProLance] = BitBoard(STRING_OF_START_PROLANCE);
-        hasSpecificPiece[(int)ProPawn] = BitBoard(STRING_OF_START_PROPAWN);
+        for (int i = 0; i < (int)ColorType::ColorNumber; i++){
+            playerPossession[i] = BitBoard();
         }
+        hasSpecificPiece[(int)None] = BitBoard(isFrame);
+        hasSpecificPiece[(int)None].board.flip();
+        for (int i = 1; i < (int)PieceTypeNumber; i++){
+            hasSpecificPiece[i] = BitBoard();
+        }
+        deploy(Address::addressToIndex(Address(1,1)), Lance, ColorType::Black);
+        deploy(Address::addressToIndex(Address(1,2)), Knight, ColorType::Black);
+        deploy(Address::addressToIndex(Address(1,3)), Silver, ColorType::Black);
+        deploy(Address::addressToIndex(Address(1,4)), Gold, ColorType::Black);
+        deploy(Address::addressToIndex(Address(1,5)), King, ColorType::Black);
+        deploy(Address::addressToIndex(Address(1,6)), Gold, ColorType::Black);
+        deploy(Address::addressToIndex(Address(1,7)), Silver, ColorType::Black);
+        deploy(Address::addressToIndex(Address(1,8)), Knight, ColorType::Black);
+        deploy(Address::addressToIndex(Address(1,9)), Lance, ColorType::Black);
+        deploy(Address::addressToIndex(Address(2,2)), Bichop, ColorType::Black);
+        deploy(Address::addressToIndex(Address(2,8)), Rook, ColorType::Black);
+        deploy(Address::addressToIndex(Address(3,1)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(3,2)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(3,3)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(3,4)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(3,5)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(3,6)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(3,7)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(3,8)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(3,9)), Pawn, ColorType::Black);
+
+        deploy(Address::addressToIndex(Address(9,1)), Lance, ColorType::White);
+        deploy(Address::addressToIndex(Address(9,2)), Knight, ColorType::White);
+        deploy(Address::addressToIndex(Address(9,3)), Silver, ColorType::White);
+        deploy(Address::addressToIndex(Address(9,4)), Gold, ColorType::White);
+        deploy(Address::addressToIndex(Address(9,5)), King, ColorType::White);
+        deploy(Address::addressToIndex(Address(9,6)), Gold, ColorType::White);
+        deploy(Address::addressToIndex(Address(9,7)), Silver, ColorType::White);
+        deploy(Address::addressToIndex(Address(9,8)), Knight, ColorType::White);
+        deploy(Address::addressToIndex(Address(9,9)), Lance, ColorType::White);
+        deploy(Address::addressToIndex(Address(8,2)), Bichop, ColorType::White);
+        deploy(Address::addressToIndex(Address(8,8)), Rook, ColorType::White);
+        deploy(Address::addressToIndex(Address(7,1)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(7,2)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(7,3)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(7,4)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(7,5)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(7,6)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(7,7)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(7,8)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(7,9)), Pawn, ColorType::White);
+
         hand = Hand();
     }
     Board(int code){
@@ -614,6 +250,32 @@ public:
         }
 
         return bitMovable & proArea;
+    }
+
+    BitBoard getAbleDropSquares(ColorType color, PieceType pieceType){
+        BitBoard ableDrop;
+        BitBoard none, last, notlast;
+        using enum PieceType;
+        switch (pieceType){
+        case PieceType::Gold:
+        case PieceType::Rook:
+        case PieceType::Bichop:
+        case PieceType::Silver:
+            return BitBoard(hasSpecificPiece[(int)None]);
+        case PieceType::Knight:
+            none = BitBoard(hasSpecificPiece[(int)None]);
+            last = BitBoard(lastTwo);
+            notlast = BitBoard(last.board.flip());
+            return BitBoard(none & notlast);
+        case PieceType::Lance:
+        case PieceType::Pawn:
+            none = BitBoard(hasSpecificPiece[(int)None]);
+            last = BitBoard(lastTwo);
+            notlast = BitBoard(last.board.flip());
+            return BitBoard(none & notlast);
+        default:
+            return BitBoard();
+        }
     }
 };
 #endif

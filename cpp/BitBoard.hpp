@@ -144,5 +144,14 @@ public:
     BitBoard operator >>(int num){
         return (*this).board >> num;
     }
+
+    static BitBoard generateColumn(int columnNo){
+        BitBoard bitBoard = BitBoard();
+        for (int i = 0; i < 9; i++){
+            bitBoard.board.set(columnNo);
+            bitBoard.board <<= 11;
+        }
+        return bitBoard;
+    }
 };
 #endif
