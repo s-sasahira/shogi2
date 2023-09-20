@@ -4,6 +4,7 @@
 #include <bitset>
 #include "BitBoard.hpp"
 #include "Board.hpp"
+#include "Address.hpp"
 #include <time.h>
 
 int main() {
@@ -48,7 +49,7 @@ int main() {
     std::cout << "ProLance: " << board.hasSpecificPiece[(uint64_t)PieceType::ProLance].board << std::endl;
     std::cout << "ProPawn : " << board.hasSpecificPiece[(uint64_t)PieceType::ProPawn].board << std::endl;
 
-    int array[5] = {35, 58, 67, 80, 101};
+    int array[5] = {19, 40, 53, 62, 85};
     for (int j = 0; j < 5; j++){
         mingw_gettimeofday(&start, NULL);
         BitBoard bitMovable = board.getAbleMoveSquares(array[j]);
@@ -59,13 +60,16 @@ int main() {
         int* indexs2;
         int indexsCount1 = bitMovable.getTrues(&indexs1);
         int indexsCount2 = bitProMovable.getTrues(&indexs2);
-        printf("%d: ", array[j]);
+        Address fromAddress = Address::indexToAddress(array[j]);
+        printf("%d%d: ", fromAddress.column, fromAddress.row);
         for (int i = 0; i < indexsCount1; i++){
-            printf("%d,", indexs1[i]);
+            Address toAddress = Address::indexToAddress(indexs1[i]);
+            printf("%d%d,", toAddress.column, toAddress.row);
         }
         printf(" pro: ");
         for (int i = 0; i < indexsCount2; i++){
-            printf("%d,", indexs2[i]);
+            Address toAddress = Address::indexToAddress(indexs2[i]);
+            printf("%d%d,", toAddress.column, toAddress.row);
         }
         printf("\n");
         free(indexs1);

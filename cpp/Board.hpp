@@ -5,6 +5,7 @@
 #include "ColorType.hpp"
 #include "Piece.hpp"
 #include "Hand.hpp"
+#include "Address.hpp"
 
 #define STRING_OF_START_PIECE "00000000000" \
                               "01111111110" \
@@ -410,12 +411,50 @@ private:
     bool isAHasSpecificPiece(int index, PieceType pieceType){
         return hasSpecificPiece[(uint64_t)pieceType].board.test(index);
     }
+    void drop(int index){
+        hasPiece.board.reset(index);
+        for (int i = 0; i < (int)ColorType::ColorNumber; i++){
+            playerPossession[i].board.reset(index);
+        }
+        hasSpecificPiece[(int)PieceType::None].board.set(index);
+        for (int i = 1; i < (int)PieceType::PieceTypeNumber; i++){
+            hasSpecificPiece[i].board.reset(index);
+        }
+    }
     void deploy(int index, PieceType pieceType, ColorType color){
-        
+        hasPiece.board.set(index);
+        for (int i = 0; i < (int)ColorType::ColorNumber; i++){
+            if (color == (ColorType)i){
+                playerPossession[i].board.set(index);
+            }else{
+                playerPossession[i].board.reset(index);
+            }
+        }
+        for (int i = 0; i < (int)PieceType::PieceTypeNumber; i++){
+            if (pieceType == (PieceType)i){
+                hasSpecificPiece[i].board.set(index);
+            }else{
+                hasSpecificPiece[i].board.reset(index);
+            }
+        }
+    }
+    void moveToHand(int index, bool isColorReverse = true){
+        PieceType pieceType = getPieceTypeFromIndex(index);
+        ColorType colorType = getColorTypeFromIndex(index);
+        if (isColorReverse){
+            colorType = Color::getReverseColor(colorType);
+        }
+
+        drop(index);
+        hand.addPiece(colorType, pieceType);
+    }
+    void moveFromHand(int index, PieceType pieceType, ColorType color){
+        hand.decreasePiece(color, pieceType);
+        deploy(index, pieceType, color);
     }
 public:
     BitBoard hasPiece;
-    BitBoard playerPossession[(uint64_t)ColorType::ColorNumber];
+    BitBoard playerPossession[(int)ColorType::ColorNumber];
     BitBoard isFrame = BitBoard(STRING_OF_FRAME);
     BitBoard ablePro[(int)ColorType::ColorNumber] = {
         BitBoard(STRING_OF_PRO_ZONE_BLACK), 
@@ -423,59 +462,51 @@ public:
     };
     BitBoard lastOne = BitBoard(STRING_OF_LAST1_ZONE);
     BitBoard lastTwo = BitBoard(STRING_OF_LAST2_ZONE);
-    BitBoard hasSpecificPiece[(uint64_t)PieceType::PieceTypeNumber];
+    BitBoard hasSpecificPiece[(int)PieceType::PieceTypeNumber];
     Hand hand;
 
     Board(){
         hasPiece = BitBoard(STRING_OF_START_PIECE);
         {
         using enum ColorType;
-        playerPossession[(uint64_t)Black] = BitBoard(STRING_OF_START_BLACK);
-        playerPossession[(uint64_t)White] = BitBoard(STRING_OF_START_WHITE);
+        playerPossession[(int)Black] = BitBoard(STRING_OF_START_BLACK);
+        playerPossession[(int)White] = BitBoard(STRING_OF_START_WHITE);
         }{
         using enum PieceType;
-        hasSpecificPiece[(uint64_t)None] = BitBoard(STRING_OF_START_NONE);
-        hasSpecificPiece[(uint64_t)King] = BitBoard(STRING_OF_START_KING);
-        hasSpecificPiece[(uint64_t)Gold] = BitBoard(STRING_OF_START_GOLD);
-        hasSpecificPiece[(uint64_t)Rook] = BitBoard(STRING_OF_START_ROOK);
-        hasSpecificPiece[(uint64_t)Bichop] = BitBoard(STRING_OF_START_BICHOP);
-        hasSpecificPiece[(uint64_t)Silver] = BitBoard(STRING_OF_START_SILVER);
-        hasSpecificPiece[(uint64_t)Knight] = BitBoard(STRING_OF_START_KNIGHT);
-        hasSpecificPiece[(uint64_t)Lance] = BitBoard(STRING_OF_START_LANCE);
-        hasSpecificPiece[(uint64_t)Pawn] = BitBoard(STRING_OF_START_PAWN);
-        hasSpecificPiece[(uint64_t)Dragon] = BitBoard(STRING_OF_START_DRAGON);
-        hasSpecificPiece[(uint64_t)Horse] = BitBoard(STRING_OF_START_HORSE);
-        hasSpecificPiece[(uint64_t)ProSilver] = BitBoard(STRING_OF_START_PROSILVER);
-        hasSpecificPiece[(uint64_t)ProKnight] = BitBoard(STRING_OF_START_PROKNIGHT);
-        hasSpecificPiece[(uint64_t)ProLance] = BitBoard(STRING_OF_START_PROLANCE);
-        hasSpecificPiece[(uint64_t)ProPawn] = BitBoard(STRING_OF_START_PROPAWN);
+        hasSpecificPiece[(int)None] = BitBoard(STRING_OF_START_NONE);
+        hasSpecificPiece[(int)King] = BitBoard(STRING_OF_START_KING);
+        hasSpecificPiece[(int)Gold] = BitBoard(STRING_OF_START_GOLD);
+        hasSpecificPiece[(int)Rook] = BitBoard(STRING_OF_START_ROOK);
+        hasSpecificPiece[(int)Bichop] = BitBoard(STRING_OF_START_BICHOP);
+        hasSpecificPiece[(int)Silver] = BitBoard(STRING_OF_START_SILVER);
+        hasSpecificPiece[(int)Knight] = BitBoard(STRING_OF_START_KNIGHT);
+        hasSpecificPiece[(int)Lance] = BitBoard(STRING_OF_START_LANCE);
+        hasSpecificPiece[(int)Pawn] = BitBoard(STRING_OF_START_PAWN);
+        hasSpecificPiece[(int)Dragon] = BitBoard(STRING_OF_START_DRAGON);
+        hasSpecificPiece[(int)Horse] = BitBoard(STRING_OF_START_HORSE);
+        hasSpecificPiece[(int)ProSilver] = BitBoard(STRING_OF_START_PROSILVER);
+        hasSpecificPiece[(int)ProKnight] = BitBoard(STRING_OF_START_PROKNIGHT);
+        hasSpecificPiece[(int)ProLance] = BitBoard(STRING_OF_START_PROLANCE);
+        hasSpecificPiece[(int)ProPawn] = BitBoard(STRING_OF_START_PROPAWN);
         }
         hand = Hand();
     }
     Board(int code){
-        hasPiece = BitBoard(STRING_OF_TEST_PIECE);
-        {
-        using enum ColorType;
-        playerPossession[(uint64_t)Black] = BitBoard(STRING_OF_TEST_BLACK);
-        playerPossession[(uint64_t)White] = BitBoard(STRING_OF_TEST_WHITE);
-        }{
+        hasPiece = BitBoard();
         using enum PieceType;
-        hasSpecificPiece[(uint64_t)None] = BitBoard(STRING_OF_TEST_NONE);
-        hasSpecificPiece[(uint64_t)King] = BitBoard(STRING_OF_TEST_KING);
-        hasSpecificPiece[(uint64_t)Gold] = BitBoard(STRING_OF_TEST_GOLD);
-        hasSpecificPiece[(uint64_t)Rook] = BitBoard(STRING_OF_TEST_ROOK);
-        hasSpecificPiece[(uint64_t)Bichop] = BitBoard(STRING_OF_TEST_BICHOP);
-        hasSpecificPiece[(uint64_t)Silver] = BitBoard(STRING_OF_TEST_SILVER);
-        hasSpecificPiece[(uint64_t)Knight] = BitBoard(STRING_OF_TEST_KNIGHT);
-        hasSpecificPiece[(uint64_t)Lance] = BitBoard(STRING_OF_TEST_LANCE);
-        hasSpecificPiece[(uint64_t)Pawn] = BitBoard(STRING_OF_TEST_PAWN);
-        hasSpecificPiece[(uint64_t)Dragon] = BitBoard(STRING_OF_TEST_DRAGON);
-        hasSpecificPiece[(uint64_t)Horse] = BitBoard(STRING_OF_TEST_HORSE);
-        hasSpecificPiece[(uint64_t)ProSilver] = BitBoard(STRING_OF_TEST_PROSILVER);
-        hasSpecificPiece[(uint64_t)ProKnight] = BitBoard(STRING_OF_TEST_PROKNIGHT);
-        hasSpecificPiece[(uint64_t)ProLance] = BitBoard(STRING_OF_TEST_PROLANCE);
-        hasSpecificPiece[(uint64_t)ProPawn] = BitBoard(STRING_OF_TEST_PROPAWN);
+        for (int i = 0; i < (int)ColorType::ColorNumber; i++){
+            playerPossession[i] = BitBoard();
         }
+        hasSpecificPiece[(int)None] = BitBoard(isFrame);
+        hasSpecificPiece[(int)None].board.flip();
+        for (int i = 1; i < (int)PieceTypeNumber; i++){
+            hasSpecificPiece[i] = BitBoard();
+        }
+        deploy(Address::addressToIndex(Address(8,1)), ProPawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(7,3)), Bichop, ColorType::Black);
+        deploy(Address::addressToIndex(Address(9,4)), Knight, ColorType::Black);
+        deploy(Address::addressToIndex(Address(7,5)), Lance, ColorType::White);
+        deploy(Address::addressToIndex(Address(8,7)), Pawn, ColorType::Black);
     }
 
     PieceType getPieceTypeFromIndex(int index){
