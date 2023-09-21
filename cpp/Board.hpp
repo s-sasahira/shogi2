@@ -67,8 +67,14 @@ public:
         BitBoard(STRING_OF_PRO_ZONE_BLACK), 
         BitBoard(STRING_OF_PRO_ZONE_WHITE)
     };
-    BitBoard lastOne = BitBoard(STRING_OF_LAST1_ZONE);
-    BitBoard lastTwo = BitBoard(STRING_OF_LAST2_ZONE);
+    BitBoard lastOne[(int)ColorType::ColorNumber] = {
+        BitBoard(STRING_OF_LAST1_ZONE_BLACK), 
+        BitBoard(STRING_OF_LAST1_ZONE_WHITE)
+    };
+    BitBoard lastTwo[(int)ColorType::ColorNumber] = {
+        BitBoard(STRING_OF_LAST2_ZONE_BLACK), 
+        BitBoard(STRING_OF_LAST2_ZONE_WHITE)
+    };
     BitBoard hasSpecificPiece[(int)PieceType::PieceTypeNumber];
     Hand hand;
 
@@ -254,25 +260,52 @@ public:
 
     BitBoard getAbleDropSquares(ColorType color, PieceType pieceType){
         BitBoard ableDrop;
-        BitBoard none, last, notlast;
+        BitBoard none, last, notlast, pawn, doublepawn, notdoublepawn;
+        int* pawnIndexs;
+        int pawnIndexCount;
+        int* pawnColumns;
         using enum PieceType;
         switch (pieceType){
-        case PieceType::Gold:
-        case PieceType::Rook:
-        case PieceType::Bichop:
-        case PieceType::Silver:
+        case Gold:
+        case Rook:
+        case Bichop:
+        case Silver:
             return BitBoard(hasSpecificPiece[(int)None]);
-        case PieceType::Knight:
+        case Knight:
             none = BitBoard(hasSpecificPiece[(int)None]);
-            last = BitBoard(lastTwo);
+            last = BitBoard(lastTwo[(int)color]);
             notlast = BitBoard(last.board.flip());
             return BitBoard(none & notlast);
-        case PieceType::Lance:
-        case PieceType::Pawn:
+        case Lance:
             none = BitBoard(hasSpecificPiece[(int)None]);
-            last = BitBoard(lastTwo);
+            last = BitBoard(lastOne[(int)color]);
             notlast = BitBoard(last.board.flip());
             return BitBoard(none & notlast);
+        case Pawn:
+            pawn = BitBoard(hasSpecificPiece[(int)Pawn] & playerPossession[(int)color]);
+            pawnIndexCount = pawn.getTrues(&pawnIndexs);
+            doublepawn = BitBoard();
+            
+            /*速度比較*/
+
+            /*A*/
+            for (int i = 0; i < pawnIndexCount; i++){
+                doublepawn = doublepawn | BitBoard::generateColumn(Address::indexToAddress(pawnIndexs[i]).column);
+            }
+
+            /*B*/
+            pawnColumns = new int[pawnIndexCount];
+            for (int i = 0; i < pawnIndexCount; i++){
+                pawnColumns[i] = Address::indexToAddress(pawnIndexs[i]).column;
+            }
+            doublepawn = BitBoard::generateColumns(pawnColumns, pawnIndexCount);
+
+            notdoublepawn = BitBoard(doublepawn);
+            notdoublepawn.board.flip();
+            none = BitBoard(hasSpecificPiece[(int)None]);
+            last = BitBoard(lastOne[(int)color]);
+            notlast = BitBoard(last.board.flip());
+            return BitBoard(none & notlast & notdoublepawn);
         default:
             return BitBoard();
         }

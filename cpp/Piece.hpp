@@ -222,5 +222,42 @@ public:
             return false;
         }
     }
+    static char* toString(PieceType pieceType){
+        using enum PieceType;
+        switch (pieceType){
+        case None:
+            return (char*)(char*)" ";
+        case King:
+            return (char*)"k";
+        case Gold:  
+            return (char*)"g";
+        case Rook:
+            return (char*)"r";
+        case Bichop:
+            return (char*)"b";
+        case Silver:
+            return (char*)"s";
+        case Knight:
+            return (char*)"n";
+        case Lance:
+            return (char*)"l";
+        case Pawn:
+            return (char*)"p";
+        case Dragon:
+            return (char*)"d";
+        case Horse:
+            return (char*)"h";
+        case ProSilver:
+            return (char*)"+s";
+        case ProKnight:
+            return (char*)"+n";
+        case ProLance:
+            return (char*)"+l";
+        case ProPawn:
+            return (char*)"+p";
+        default:
+            return (char*)"";
+        }
+    }
 };
 #endif

@@ -26,8 +26,6 @@ int main() {
     mingw_gettimeofday(&end, NULL);
     std::cout << "duration = " << (end.tv_usec - start.tv_usec) << "usec.\n";
 
-    
-    
     std::cout << "frame   : " << board.isFrame.board << std::endl;
     std::cout << "hasPiece: " << board.hasPiece.board << std::endl;
     std::cout << "ableProB: " << board.ablePro[0].board << std::endl;
@@ -76,19 +74,55 @@ int main() {
         free(indexs1);
         free(indexs2);
     }
-    
-    mingw_gettimeofday(&start, NULL);
-    BitBoard a = BitBoard::generateColumn(8);
-    mingw_gettimeofday(&end, NULL);
-    std::cout << "duration = " << (end.tv_usec - start.tv_usec) << "usec.\n";
 
-    std::cout << "a : " << a.board << std::endl;
-    int* indexs;
-    int indexsCount = a.getTrues(&indexs);
-     printf(" a: ");
-    for (int i = 0; i < indexsCount; i++){
-        Address toAddress = Address::indexToAddress(indexs[i]);
+    printf("Speed Comparison:\n");
+    int* pawnIndexs;
+    BitBoard pawn = BitBoard(board.hasSpecificPiece[(int)PieceType::Pawn] & board.playerPossession[(int)ColorType::Black]);
+    int pawnIndexCount = pawn.getTrues(&pawnIndexs);
+    int* xs;
+    int xc;
+    BitBoard doublepawn;
+
+    mingw_gettimeofday(&start, NULL);
+    /*A*/
+    for (int i = 0; i < pawnIndexCount; i++){
+        doublepawn = doublepawn | BitBoard::generateColumn(Address::indexToAddress(pawnIndexs[i]).column);
+    }
+    mingw_gettimeofday(&end, NULL);
+    std::cout << "Plan A is " << (end.tv_usec - start.tv_usec) << "usec.\n";
+
+    mingw_gettimeofday(&start, NULL);
+    /*B*/
+    int* pawnColumns = new int[pawnIndexCount];
+    for (int i = 0; i < pawnIndexCount; i++){
+        pawnColumns[i] = Address::indexToAddress(pawnIndexs[i]).column;
+    }
+    doublepawn = BitBoard::generateColumns(pawnColumns, pawnIndexCount);
+    mingw_gettimeofday(&end, NULL);
+    std::cout << "Plan B is " << (end.tv_usec - start.tv_usec) << "usec.\n";
+
+    xc = doublepawn.getTrues(&xs);
+    for (int i = 0; i < xc; i++){
+        Address toAddress = Address::indexToAddress(xs[i]);
         printf("%d%d,", toAddress.column, toAddress.row);
     }
     printf("\n");
+
+    int handpiece[8] = {1,2,3,4,5,6,7,8};
+    for (int j = 0; j < 8 * 2; j++){
+        ColorType color = (ColorType)(j % 2);
+        mingw_gettimeofday(&start, NULL);
+        BitBoard a = board.getAbleDropSquares(color, (PieceType)handpiece[j / 2]);
+        mingw_gettimeofday(&end, NULL);
+        std::cout << "duration = " << (end.tv_usec - start.tv_usec) << "usec.\n";
+        int* indexs;
+        int indexsCount = a.getTrues(&indexs);
+        printf("%s/%c: ", Piece::toString((PieceType)handpiece[j / 2]), (bool)color ? 'W' : 'B');
+        for (int i = 0; i < indexsCount; i++){
+            Address toAddress = Address::indexToAddress(indexs[i]);
+            printf("%d%d,", toAddress.column, toAddress.row);
+        }
+        printf("\n");
+    }
+    
 }
