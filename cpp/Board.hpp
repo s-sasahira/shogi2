@@ -92,47 +92,47 @@ public:
         for (int i = 1; i < (int)PieceTypeNumber; i++){
             hasSpecificPiece[i] = BitBoard();
         }
-        deploy(Address::addressToIndex(Address(1,1)), Lance, ColorType::Black);
-        deploy(Address::addressToIndex(Address(1,2)), Knight, ColorType::Black);
-        deploy(Address::addressToIndex(Address(1,3)), Silver, ColorType::Black);
-        deploy(Address::addressToIndex(Address(1,4)), Gold, ColorType::Black);
-        deploy(Address::addressToIndex(Address(1,5)), King, ColorType::Black);
-        deploy(Address::addressToIndex(Address(1,6)), Gold, ColorType::Black);
-        deploy(Address::addressToIndex(Address(1,7)), Silver, ColorType::Black);
-        deploy(Address::addressToIndex(Address(1,8)), Knight, ColorType::Black);
-        deploy(Address::addressToIndex(Address(1,9)), Lance, ColorType::Black);
-        deploy(Address::addressToIndex(Address(2,2)), Bichop, ColorType::Black);
-        deploy(Address::addressToIndex(Address(2,8)), Rook, ColorType::Black);
-        deploy(Address::addressToIndex(Address(3,1)), Pawn, ColorType::Black);
-        deploy(Address::addressToIndex(Address(3,2)), Pawn, ColorType::Black);
-        deploy(Address::addressToIndex(Address(3,3)), Pawn, ColorType::Black);
-        deploy(Address::addressToIndex(Address(3,4)), Pawn, ColorType::Black);
-        deploy(Address::addressToIndex(Address(3,5)), Pawn, ColorType::Black);
-        deploy(Address::addressToIndex(Address(3,6)), Pawn, ColorType::Black);
-        deploy(Address::addressToIndex(Address(3,7)), Pawn, ColorType::Black);
-        deploy(Address::addressToIndex(Address(3,8)), Pawn, ColorType::Black);
-        deploy(Address::addressToIndex(Address(3,9)), Pawn, ColorType::Black);
-
+        deploy(Address::addressToIndex(Address(1,1)), Lance, ColorType::White);
+        deploy(Address::addressToIndex(Address(2,1)), Knight, ColorType::White);
+        deploy(Address::addressToIndex(Address(3,1)), Silver, ColorType::White);
+        deploy(Address::addressToIndex(Address(4,1)), Gold, ColorType::White);
+        deploy(Address::addressToIndex(Address(5,1)), King, ColorType::White);
+        deploy(Address::addressToIndex(Address(6,1)), Gold, ColorType::White);
+        deploy(Address::addressToIndex(Address(7,1)), Silver, ColorType::White);
+        deploy(Address::addressToIndex(Address(8,1)), Knight, ColorType::White);
         deploy(Address::addressToIndex(Address(9,1)), Lance, ColorType::White);
-        deploy(Address::addressToIndex(Address(9,2)), Knight, ColorType::White);
-        deploy(Address::addressToIndex(Address(9,3)), Silver, ColorType::White);
-        deploy(Address::addressToIndex(Address(9,4)), Gold, ColorType::White);
-        deploy(Address::addressToIndex(Address(9,5)), King, ColorType::White);
-        deploy(Address::addressToIndex(Address(9,6)), Gold, ColorType::White);
-        deploy(Address::addressToIndex(Address(9,7)), Silver, ColorType::White);
-        deploy(Address::addressToIndex(Address(9,8)), Knight, ColorType::White);
-        deploy(Address::addressToIndex(Address(9,9)), Lance, ColorType::White);
-        deploy(Address::addressToIndex(Address(8,2)), Bichop, ColorType::White);
-        deploy(Address::addressToIndex(Address(8,8)), Rook, ColorType::White);
-        deploy(Address::addressToIndex(Address(7,1)), Pawn, ColorType::White);
-        deploy(Address::addressToIndex(Address(7,2)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(2,2)), Bichop, ColorType::White);
+        deploy(Address::addressToIndex(Address(8,2)), Rook, ColorType::White);
+        deploy(Address::addressToIndex(Address(1,3)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(2,3)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(3,3)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(4,3)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(5,3)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(6,3)), Pawn, ColorType::White);
         deploy(Address::addressToIndex(Address(7,3)), Pawn, ColorType::White);
-        deploy(Address::addressToIndex(Address(7,4)), Pawn, ColorType::White);
-        deploy(Address::addressToIndex(Address(7,5)), Pawn, ColorType::White);
-        deploy(Address::addressToIndex(Address(7,6)), Pawn, ColorType::White);
-        deploy(Address::addressToIndex(Address(7,7)), Pawn, ColorType::White);
-        deploy(Address::addressToIndex(Address(7,8)), Pawn, ColorType::White);
-        deploy(Address::addressToIndex(Address(7,9)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(8,3)), Pawn, ColorType::White);
+        deploy(Address::addressToIndex(Address(9,3)), Pawn, ColorType::White);
+
+        deploy(Address::addressToIndex(Address(1,9)), Lance, ColorType::Black);
+        deploy(Address::addressToIndex(Address(2,9)), Knight, ColorType::Black);
+        deploy(Address::addressToIndex(Address(3,9)), Silver, ColorType::Black);
+        deploy(Address::addressToIndex(Address(4,9)), Gold, ColorType::Black);
+        deploy(Address::addressToIndex(Address(5,9)), King, ColorType::Black);
+        deploy(Address::addressToIndex(Address(6,9)), Gold, ColorType::Black);
+        deploy(Address::addressToIndex(Address(7,9)), Silver, ColorType::Black);
+        deploy(Address::addressToIndex(Address(8,9)), Knight, ColorType::Black);
+        deploy(Address::addressToIndex(Address(9,9)), Lance, ColorType::Black);
+        deploy(Address::addressToIndex(Address(2,8)), Bichop, ColorType::Black);
+        deploy(Address::addressToIndex(Address(8,8)), Rook, ColorType::Black);
+        deploy(Address::addressToIndex(Address(1,7)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(2,7)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(3,7)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(4,7)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(5,7)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(6,7)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(7,7)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(8,7)), Pawn, ColorType::Black);
+        deploy(Address::addressToIndex(Address(9,7)), Pawn, ColorType::Black);
 
         hand = Hand();
     }
@@ -309,7 +309,7 @@ public:
     int serchMoves(Move** moves, ColorType color){
         std::vector<Move> vectorMove;
 
-        BitBoard playerBoard = (bool)color ? playerPossession[(int)ColorType::White] : playerPossession[(int)ColorType::White];
+        BitBoard playerBoard = (bool)color ? playerPossession[(int)ColorType::White] : playerPossession[(int)ColorType::Black];
         int* playerBoardIndexs;
         int playerBoardIndexsCount = playerBoard.getTrues(&playerBoardIndexs);
         for (int i = 0; i < playerBoardIndexsCount; i++){
