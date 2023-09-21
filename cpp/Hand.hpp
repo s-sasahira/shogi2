@@ -18,7 +18,7 @@ class Hand{
 private:
     int calcIndex(ColorType colorType, PieceType pieceType){
         using enum PieceType;
-        return (int)colorType * (int)NotProPieceTypeNumber + (int)pieceType;
+        return (int)colorType * (int)NotProPieceTypeNumber + (int)pieceType - 1;
     }
 public:
     Piece pieces[(int)PieceType::NotProPieceTypeNumber * (int)ColorType::ColorNumber];
@@ -28,7 +28,7 @@ public:
         for (int j = (int)Black; j < (int)ColorNumber; j++){
             using enum PieceType;
             for (int i = (int)King; i <= (int)NotProPieceTypeNumber; i++){
-                int index = j * (int)NotProPieceTypeNumber + i;
+                int index = j * (int)NotProPieceTypeNumber + i - 1;
                 pieces[index] = Piece((ColorType)j, (PieceType)i);
                 counts[index] = 0;
             }
@@ -49,6 +49,19 @@ public:
     void decreasePiece(ColorType colorType, PieceType pieceType){
         int index = calcIndex(colorType, pieceType);
         counts[index]--;
+    }
+    int getPlayerPieces(Piece** pieces, ColorType colorType){
+        using enum PieceType;
+        int resultIndex = 0;
+        (*pieces) = new Piece[(int)NotProPieceTypeNumber];
+        for (int i = (int)King; i <= (int)NotProPieceTypeNumber; i++){
+            int index = calcIndex(colorType, (PieceType)i);
+            if (counts[index] > 0){
+                (*pieces)[resultIndex] = (*this).pieces[index];
+                resultIndex++;
+            }
+        }
+        return resultIndex;
     }
 };
 

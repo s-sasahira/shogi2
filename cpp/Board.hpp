@@ -1,11 +1,14 @@
 #ifndef BOARD_HPP
 #define BOARD_HPP
+
+#include <vector>
 #include "BitBoard.hpp"
 #include "PieceType.hpp"
 #include "ColorType.hpp"
 #include "Piece.hpp"
 #include "Hand.hpp"
 #include "Address.hpp"
+#include "Move.hpp"
 
 class Board
 {
@@ -149,6 +152,10 @@ public:
         deploy(Address::addressToIndex(Address(9,4)), Knight, ColorType::Black);
         deploy(Address::addressToIndex(Address(7,5)), Lance, ColorType::White);
         deploy(Address::addressToIndex(Address(8,7)), Pawn, ColorType::Black);
+
+        hand = Hand();
+        hand.addPiece(ColorType::Black, PieceType::Pawn);
+        hand.addPiece(ColorType::Black, PieceType::Silver);
     }
 
     PieceType getPieceTypeFromIndex(int index){
@@ -263,7 +270,6 @@ public:
         BitBoard none, last, notlast, pawn, doublepawn, notdoublepawn;
         int* pawnIndexs;
         int pawnIndexCount;
-        int* pawnColumns;
         using enum PieceType;
         switch (pieceType){
         case Gold:
@@ -285,20 +291,10 @@ public:
             pawn = BitBoard(hasSpecificPiece[(int)Pawn] & playerPossession[(int)color]);
             pawnIndexCount = pawn.getTrues(&pawnIndexs);
             doublepawn = BitBoard();
-            
-            /*速度比較*/
 
-            /*A*/
             for (int i = 0; i < pawnIndexCount; i++){
                 doublepawn = doublepawn | BitBoard::generateColumn(Address::indexToAddress(pawnIndexs[i]).column);
             }
-
-            /*B*/
-            pawnColumns = new int[pawnIndexCount];
-            for (int i = 0; i < pawnIndexCount; i++){
-                pawnColumns[i] = Address::indexToAddress(pawnIndexs[i]).column;
-            }
-            doublepawn = BitBoard::generateColumns(pawnColumns, pawnIndexCount);
 
             notdoublepawn = BitBoard(doublepawn);
             notdoublepawn.board.flip();
@@ -309,6 +305,57 @@ public:
         default:
             return BitBoard();
         }
+    }
+    int serchMoves(Move** moves, ColorType color){
+        std::vector<Move> vectorMove;
+
+        BitBoard playerBoard = (bool)color ? playerPossession[(int)ColorType::White] : playerPossession[(int)ColorType::White];
+        int* playerBoardIndexs;
+        int playerBoardIndexsCount = playerBoard.getTrues(&playerBoardIndexs);
+        for (int i = 0; i < playerBoardIndexsCount; i++){
+            int* moveIndexs;
+            int moveIndexsCount;
+
+            /*成らない手*/
+            BitBoard moveBoard = getAbleMoveSquares(playerBoardIndexs[i]);
+            moveIndexsCount = moveBoard.getTrues(&moveIndexs);
+            for (int j = 0; j < moveIndexsCount; j++){
+                Address from = Address(playerBoardIndexs[i]);
+                Address to = Address(moveIndexs[j]);
+                Move move = Move(from, to, false);
+                vectorMove.push_back(move);
+            }
+
+            /*成る手*/
+            BitBoard proBoard = getAbleProMoveSquares(playerBoardIndexs[i], moveBoard);
+            moveIndexsCount = moveBoard.getTrues(&moveIndexs);
+            for (int j = 0; j < moveIndexsCount; j++){
+                Address from = Address(playerBoardIndexs[i]);
+                Address to = Address(moveIndexs[j]);
+                Move move = Move(from, to, true);
+                vectorMove.push_back(move);
+            }
+        }
+
+        Piece* playerHandPieces;
+        int playerHandPiecesCount = hand.getPlayerPieces(&playerHandPieces, color);
+        for (int i = 0; i < playerHandPiecesCount; i++){
+            int* moveIndexs;
+            int moveIndexsCount;
+            BitBoard moveBoard = getAbleDropSquares(playerHandPieces[i].owner, playerHandPieces[i].type);
+            moveIndexsCount = moveBoard.getTrues(&moveIndexs);
+            for (int j = 0; j < moveIndexsCount; j++){
+                Address to = Address(moveIndexs[j]);
+                Move move = Move(playerHandPieces[i], to);
+                vectorMove.push_back(move);
+            }
+        }
+
+        (*moves) = vectorMove.data(); 
+        return vectorMove.size();
+    }
+    void executeMove(Move move){
+
     }
 };
 #endif

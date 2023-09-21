@@ -1,6 +1,7 @@
 #ifndef PIECE_HPP
 #define PIECE_HPP
 
+#include <bitset>
 #include "PieceType.hpp"
 #include "PieceName.hpp"
 #include "HandPiece.hpp"
@@ -10,6 +11,43 @@
 class Piece
 {
 private:
+    static char* convertString(PieceType pieceType){
+        using enum PieceType;
+        switch (pieceType){
+        case None:
+            return (char*)(char*)" ";
+        case King:
+            return (char*)"k";
+        case Gold:  
+            return (char*)"g";
+        case Rook:
+            return (char*)"r";
+        case Bichop:
+            return (char*)"b";
+        case Silver:
+            return (char*)"s";
+        case Knight:
+            return (char*)"n";
+        case Lance:
+            return (char*)"l";
+        case Pawn:
+            return (char*)"p";
+        case Dragon:
+            return (char*)"d";
+        case Horse:
+            return (char*)"h";
+        case ProSilver:
+            return (char*)"+s";
+        case ProKnight:
+            return (char*)"+n";
+        case ProLance:
+            return (char*)"+l";
+        case ProPawn:
+            return (char*)"+p";
+        default:
+            return (char*)"";
+        }
+    }
 public:
     ColorType owner;
     PieceType type;
@@ -20,6 +58,21 @@ public:
     Piece(ColorType colorType, PieceType pieceType){
         owner = colorType;
         type = pieceType;
+    }
+    Piece(int num){
+        std::bitset<5> bit(num);
+        owner = (ColorType)(int)bit[0];
+        bit >>= 1;
+        type = (PieceType)bit.to_ulong();
+    }
+    int toInt(){
+        int result = (int)type;
+        result <<= 1;
+        result += (int)owner;
+        return result;
+    }
+    char* toString(){
+        return convertString(type);
     }
     static void getMoveType(MoveType moveTypes[(int)DirectionName::DirectionNameNumber], PieceType pieceType){
         using enum PieceType;
@@ -223,41 +276,7 @@ public:
         }
     }
     static char* toString(PieceType pieceType){
-        using enum PieceType;
-        switch (pieceType){
-        case None:
-            return (char*)(char*)" ";
-        case King:
-            return (char*)"k";
-        case Gold:  
-            return (char*)"g";
-        case Rook:
-            return (char*)"r";
-        case Bichop:
-            return (char*)"b";
-        case Silver:
-            return (char*)"s";
-        case Knight:
-            return (char*)"n";
-        case Lance:
-            return (char*)"l";
-        case Pawn:
-            return (char*)"p";
-        case Dragon:
-            return (char*)"d";
-        case Horse:
-            return (char*)"h";
-        case ProSilver:
-            return (char*)"+s";
-        case ProKnight:
-            return (char*)"+n";
-        case ProLance:
-            return (char*)"+l";
-        case ProPawn:
-            return (char*)"+p";
-        default:
-            return (char*)"";
-        }
+        return convertString(pieceType);
     }
 };
 #endif
