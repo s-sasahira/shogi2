@@ -6,6 +6,10 @@ private:
 public:
     int column; //アラビア数字の方
     int row; //漢数字の方
+    Address(){
+        column = 0;
+        row = 0;
+    }
     Address(int c, int r){
         column = c;
         row = r;

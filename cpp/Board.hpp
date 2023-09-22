@@ -2,13 +2,16 @@
 #define BOARD_HPP
 
 #include <vector>
+#include <time.h>
 #include "BitBoard.hpp"
 #include "PieceType.hpp"
 #include "ColorType.hpp"
+#include "Color.hpp"
 #include "Piece.hpp"
 #include "Hand.hpp"
 #include "Address.hpp"
 #include "Move.hpp"
+#include "PieceValue.hpp"
 
 class Board
 {
@@ -42,6 +45,12 @@ private:
                 hasSpecificPiece[i].board.reset(index);
             }
         }
+    }
+    void moveStandard(int fromIndex, int toIndex){
+        PieceType pieceType = getPieceTypeFromIndex(fromIndex);
+        ColorType colorType = getColorTypeFromIndex(fromIndex);
+        drop(fromIndex);
+        deploy(toIndex, pieceType, colorType);
     }
     void moveToHand(int index, bool isColorReverse = true){
         using enum PieceType;
@@ -306,12 +315,23 @@ public:
             return BitBoard();
         }
     }
+
+
     int serchMoves(Move** moves, ColorType color){
-        std::vector<Move> vectorMove;
+        struct timeval start, sec1, sec2, sec3, sec4;
+        mingw_gettimeofday(&start, NULL);
+
+        // int size = 0; /*改善案*/
+
+        // Move* arrayMove; /*改善案*/
+        std::vector<Move> vectorMove; /*代替*/
 
         BitBoard playerBoard = (bool)color ? playerPossession[(int)ColorType::White] : playerPossession[(int)ColorType::Black];
         int* playerBoardIndexs;
         int playerBoardIndexsCount = playerBoard.getTrues(&playerBoardIndexs);
+
+        mingw_gettimeofday(&sec1, NULL);
+
         for (int i = 0; i < playerBoardIndexsCount; i++){
             int* moveIndexs;
             int moveIndexsCount;
@@ -319,24 +339,37 @@ public:
             /*成らない手*/
             BitBoard moveBoard = getAbleMoveSquares(playerBoardIndexs[i]);
             moveIndexsCount = moveBoard.getTrues(&moveIndexs);
+            // Move* aMove = new Move[moveIndexsCount]; /*改善案*/
             for (int j = 0; j < moveIndexsCount; j++){
                 Address from = Address(playerBoardIndexs[i]);
                 Address to = Address(moveIndexs[j]);
                 Move move = Move(from, to, false);
-                vectorMove.push_back(move);
+                vectorMove.push_back(move); /*代替*/
+                // aMove[j] = move; /*改善案*/
             }
+            // Move* oldArrayMove = arrayMove; /*改善案*/
+            // arrayMove = new Move[size + moveIndexsCount]; /*改善案*/
+            // if (size > 0){ /*改善案*/
+            //     std::move(arrayMove, &arrayMove[size - 1], arrayMove); /*改善案*/
+            // } /*改善案*/
+            
 
             /*成る手*/
             BitBoard proBoard = getAbleProMoveSquares(playerBoardIndexs[i], moveBoard);
-            moveIndexsCount = moveBoard.getTrues(&moveIndexs);
+            moveIndexsCount = proBoard.getTrues(&moveIndexs);
+            // Move* bMove = new Move[moveIndexsCount]; /*改善案*/
             for (int j = 0; j < moveIndexsCount; j++){
                 Address from = Address(playerBoardIndexs[i]);
                 Address to = Address(moveIndexs[j]);
                 Move move = Move(from, to, true);
-                vectorMove.push_back(move);
+                vectorMove.push_back(move); /*代替*/
+                // bMove[j] = move; /*改善案*/
             }
         }
 
+        mingw_gettimeofday(&sec2, NULL);
+
+        /*指し手*/
         Piece* playerHandPieces;
         int playerHandPiecesCount = hand.getPlayerPieces(&playerHandPieces, color);
         for (int i = 0; i < playerHandPiecesCount; i++){
@@ -344,18 +377,81 @@ public:
             int moveIndexsCount;
             BitBoard moveBoard = getAbleDropSquares(playerHandPieces[i].owner, playerHandPieces[i].type);
             moveIndexsCount = moveBoard.getTrues(&moveIndexs);
+            // Move* cMove = new Move[moveIndexsCount]; /*改善案*/
             for (int j = 0; j < moveIndexsCount; j++){
                 Address to = Address(moveIndexs[j]);
                 Move move = Move(playerHandPieces[i], to);
-                vectorMove.push_back(move);
+                vectorMove.push_back(move); /*代替*/
+                // cMove[j] = move; /*改善案*/
             }
         }
 
-        (*moves) = vectorMove.data(); 
-        return vectorMove.size();
-    }
-    void executeMove(Move move){
+        mingw_gettimeofday(&sec3, NULL);
 
+        int size = vectorMove.size(); /*代替*/
+        (*moves) = new Move[size]; /*代替*/
+        std::copy(vectorMove.begin(), vectorMove.end(), (*moves)); /*代替*/
+
+        mingw_gettimeofday(&sec4, NULL);
+
+        // printf("sec1: %d u sec, ", ((sec1.tv_sec - start.tv_sec) * 1000000) + (sec1.tv_usec - start.tv_usec));
+        // printf("sec2: %d u sec, ", ((sec2.tv_sec - sec1.tv_sec) * 1000000) + (sec2.tv_usec - sec1.tv_usec));
+        // printf("sec3: %d u sec, ", ((sec3.tv_sec - sec2.tv_sec) * 1000000) + (sec3.tv_usec - sec2.tv_usec));
+        // printf("sec4: %d u sec, ", ((sec4.tv_sec - sec3.tv_sec) * 1000000) + (sec4.tv_usec - sec3.tv_usec));
+        // printf("\n");
+
+        return size;
+    }
+
+    void executeMove(Move move){
+        /*Moveの分解*/
+        bool isDrop = move.getIsDrop();
+        bool isPromote = move.getIsPromote();
+        int toIndex = move.getTo().toIndex();
+        Piece piece;
+        int fromIndex;
+        if (isDrop){
+            piece = move.getPiece();
+        }else{
+            fromIndex = move.getFrom().toIndex();
+        }
+
+        /*移動先にすでに駒があるか*/
+        if (hasPiece.board.test(toIndex)){
+            moveToHand(toIndex);
+        }
+
+        /*駒の設置*/
+        if (isDrop){
+            moveFromHand(toIndex, piece.type, piece.owner);
+        }else{
+            moveStandard(fromIndex, toIndex);
+        }
+    }
+    int* calculateValue(){
+        int* result = new int[(int)ColorType::ColorNumber];
+        int* pieces;
+        int pieceCount = hasPiece.getTrues(&pieces);
+        for (int i = 0; i < pieceCount; i++){
+            PieceType pieceType = getPieceTypeFromIndex(pieces[i]);
+            ColorType colorType = getColorTypeFromIndex(pieces[i]);
+            result[(int)colorType] += PieceValue::getValue(pieceType);
+        }
+        return result;
+    }
+    bool isFinished(ColorType* winner){
+        bool result = hasSpecificPiece[(int)PieceType::King].board.count() != (int)ColorType::ColorNumber;
+        if (result){
+            bool isBlackWin = (hasSpecificPiece[(int)PieceType::King] & playerPossession[(int)ColorType::Black]).board.any();
+            if (isBlackWin){
+                *winner = ColorType::Black;
+            }else{
+                *winner = ColorType::White;
+            }
+        }else{
+            *winner = ColorType::None;
+        }
+        return result;
     }
 };
 #endif

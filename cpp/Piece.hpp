@@ -15,7 +15,7 @@ private:
         using enum PieceType;
         switch (pieceType){
         case None:
-            return (char*)(char*)" ";
+            return (char*)" ";
         case King:
             return (char*)"k";
         case Gold:  

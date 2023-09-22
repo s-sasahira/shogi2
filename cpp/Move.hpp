@@ -19,6 +19,9 @@ public:
     7bit: target index
     7bit: from index / piece type and color type
     */
+    Move(){
+        value = std::bitset<16>(0);
+    }
     Move(Address from, Address to, bool promote){
         std::bitset<16> bitFrom(from.toIndex());
         std::bitset<16> bitTo(to.toIndex());
@@ -66,20 +69,18 @@ public:
     }
 
     char* toString(){
-        char* first;
+        char* first = new char[2];
         if (getIsDrop()){
             Piece piece = getPiece();
-            first = piece.toString();
+            sprintf(first, "%s%s", piece.toString(), "*");
         }else{
             Address from = getFrom();
             first = from.toString();
         }
-        printf("first: %s\n", first);
         Address to = getTo();
-        printf("to: %s\n", to.toString());
         bool isPro = getIsPromote();
         char* result = new char[5];
-        sprintf(result, "%s%s%c", first, to.toString(), isPro ? '+' : ' ');
+        sprintf(result, "%s%s%s", first, to.toString(), isPro ? "+" : "");
         return result;
     }
 };

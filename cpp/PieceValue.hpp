@@ -23,6 +23,7 @@ public:
         case ProKnight: return   540;
         case ProLance : return   540;
         case ProPawn  : return   540;
+        default       : return     0;
         }
     }
 };
