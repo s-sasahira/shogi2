@@ -304,6 +304,7 @@ public:
             for (int i = 0; i < pawnIndexCount; i++){
                 doublepawn = doublepawn | BitBoard::generateColumn(Address::indexToAddress(pawnIndexs[i]).column);
             }
+            delete(pawnIndexs);
 
             notdoublepawn = BitBoard(doublepawn);
             notdoublepawn.board.flip();
@@ -352,7 +353,7 @@ public:
             // if (size > 0){ /*改善案*/
             //     std::move(arrayMove, &arrayMove[size - 1], arrayMove); /*改善案*/
             // } /*改善案*/
-            
+            delete(moveIndexs);
 
             /*成る手*/
             BitBoard proBoard = getAbleProMoveSquares(playerBoardIndexs[i], moveBoard);
@@ -365,6 +366,7 @@ public:
                 vectorMove.push_back(move); /*代替*/
                 // bMove[j] = move; /*改善案*/
             }
+            delete(moveIndexs);
         }
 
         mingw_gettimeofday(&sec2, NULL);
@@ -384,6 +386,7 @@ public:
                 vectorMove.push_back(move); /*代替*/
                 // cMove[j] = move; /*改善案*/
             }
+            delete(moveIndexs);
         }
 
         mingw_gettimeofday(&sec3, NULL);
@@ -399,6 +402,7 @@ public:
         // printf("sec3: %d u sec, ", ((sec3.tv_sec - sec2.tv_sec) * 1000000) + (sec3.tv_usec - sec2.tv_usec));
         // printf("sec4: %d u sec, ", ((sec4.tv_sec - sec3.tv_sec) * 1000000) + (sec4.tv_usec - sec3.tv_usec));
         // printf("\n");
+        delete(playerBoardIndexs);
 
         return size;
     }
@@ -437,6 +441,7 @@ public:
             ColorType colorType = getColorTypeFromIndex(pieces[i]);
             result[(int)colorType] += PieceValue::getValue(pieceType);
         }
+        delete(pieces);
         return result;
     }
     bool isFinished(ColorType* winner){

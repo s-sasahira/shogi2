@@ -15,7 +15,7 @@ int main() {
 
     struct timeval start, end;
     mingw_gettimeofday(&start, NULL);
-    int limit = 3;
+    int limit = 2;
     int count = 0;
     while(1){
         mingw_gettimeofday(&end, NULL);
